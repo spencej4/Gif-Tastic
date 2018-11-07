@@ -52,6 +52,7 @@ input {
     height: 30px;
     border-radius: 15px;
     font-size: 18px;
+    cursor: pointer;
 }
 
 .actor-btn:hover {
@@ -75,7 +76,8 @@ input {
 .load-more {
     width: 150px;
     height: 45px;
-    margin: 35px;
+    margin-top: 55px;
+    margin-bottom: 75px;
     border-radius: 7px;
     font-size: 18px;
     cursor: pointer;
@@ -159,6 +161,11 @@ input {
     color: #666;
 }
 
+.alertUser {
+    color: hotpink;
+    background-color: lightgrey;
+}
+
 #loading {
     width: 100%;
     height: 50px;
@@ -170,7 +177,7 @@ input {
     margin-left: 15px;
     font-size: 2em;
     color: rgb(244, 118, 208);
-    margin-top: 2%;
+    margin-top: 12%;
 }
 
 /* loading icon*/

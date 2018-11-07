@@ -1,4 +1,5 @@
-let topics = ["Will Farrell", "Paul Rudd", "Andy Samberg"];
+let topics = ["Fred Armisen", "Kate McKinnon", "Paul Rudd", "Andy Samberg"];
+let loadMoreCount = 1;
 
 function renderButtons() {
     // Deleting the actors prior to adding new movies
@@ -19,17 +20,22 @@ function renderButtons() {
     };
 }
 
-// handles events where a actor button is clicked
+// adds new topic button 
 $("#add-gif").on("click", function (event) {
     event.preventDefault();
     // grabs the input from the textbox
     let topic = $("#gif-input").val().trim();
-    // clears input field 
-    $("#gif-input").val('');
-    // adds an actor from the textbox to our array
-    topics.push(topic);
-    // calls renderButtons which handles the processing of our movie array
-    renderButtons();
+
+    if (topic !== ''){
+        // clears input field 
+        $("#gif-input").val('');
+        // adds an actor from the textbox to our array
+        topics.push(topic);
+        // calls renderButtons which handles the processing of our movie array
+        renderButtons();
+    }else if(topic === ''){
+        $('#gif-input').addClass('alertUser');
+    }
 });
 
 function displayGifs() {
@@ -37,7 +43,6 @@ function displayGifs() {
     $("#actor-gifs").empty();
     // gets data-name of button clicked
     let actor = $(this).attr("data-name");
-    console.log(actor);
     let queryURL = "http://api.giphy.com/v1/gifs/search?q=" + actor + "&api_key=7LNAVyd8OAIppT6QjyyPVOQd54A1M8Tj"
 
     // jquery ajax call
@@ -52,6 +57,7 @@ function displayGifs() {
 
         // promise
         .then(function (response) {
+            console.log(response);
             for (var i = 0; i < response.data.length; i++) {
                 // imageUrl variable response data image gif url is set to
                 let imageUrl = response.data[i].images.fixed_height_still.url;
@@ -70,24 +76,29 @@ function displayGifs() {
                 $("#loading").css('display', 'none');
                 // prepends to div with ID of images
                 $("#actor-gifs").prepend(actorImage);
-                // showMoreButton(actor);
+                
             }
             showMoreButton(actor);
         });
-
 }
 
 function showMoreButton(actor) {
-    // checks if button is active, to avoid making repeated 'more' buttons
-    if ($('#more').hasClass('inactive')) {
-        $('#more').removeClass('inactive').addClass('active');
-        let loadMore = $('<button>').addClass('load-more').text('Load More');
-        // adds attribute name of actor to loadMore button
-        loadMore.attr("actor", actor);
-        $('#more').append(loadMore);
-    }else {
-        $('.load-more').attr("actor", actor);
-    }
+
+    $(window).on('scroll', function () {
+        console.log('scroll ran');
+    
+        // checks if button is active, to avoid making repeated 'more' buttons
+        if ($('#more').hasClass('inactive')) {
+            $('#more').removeClass('inactive').addClass('active');
+            let loadMore = $('<button>').addClass('load-more').text('Load More');
+            // adds attribute name of actor to loadMore button
+            loadMore.attr("actor", actor);
+            $('#more').append(loadMore);
+        }else {
+            $('.load-more').attr("actor", actor);
+        }
+
+    });
 }
 
 // makes api call when loadMore button is clicked
@@ -95,8 +106,9 @@ function loadMoreGifs() {
     // gets data-name of button clicked
     let actor = $(this).attr('actor');
 
-    let queryURL = "http://api.giphy.com/v1/gifs/search?q=" + actor + "&api_key=7LNAVyd8OAIppT6QjyyPVOQd54A1M8Tj"
-
+    let queryURL = "http://api.giphy.com/v1/gifs/search?q=" + actor + "&offset=" + loadMoreCount + "&api_key=7LNAVyd8OAIppT6QjyyPVOQd54A1M8Tj"
+    // iterate up for next use of loadMoreGifs
+    loadMoreCount++;
     // jquery ajax call
     $.ajax({
             url: queryURL,
@@ -139,6 +151,10 @@ function toggleGif() {
         $(this).attr('data-state', 'still');
     }
 }
+
+$("#gif-input").keypress(function () {
+    $('#gif-input').removeClass('alertUser');
+});
 
 $(document).on("click", ".actor-btn", displayGifs);
 $(document).on("click", ".actor-GIF", toggleGif);
