@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Actor Gif Search</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+</head>
+
+<body>
+    <header class='header'>
+        <form id="gif-form">
+            <label id="gif_input">GifTastic!</label>
+            <input type="text" id="gif-input">
+            <button id="add-gif" type="submit" value="Add your actor!">Add your Actor!</button>
+        </form>
+
+    </header>
+    <div class="container">
+        <h1>Actor Search</h1>
+        <!-- Rendered Buttons will get Dumped Here  -->
+        <div id="buttons-view"></div>
+        <!-- Actors buttons will appear here -->
+        <div id="actors-view"></div>
+
+
+        <div id='loading'>
+            <h1 class='loadingH1'>loading...</h1>
+            <div class="lds-ellipsis">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+
+        <div id="actor-gifs"></div>
+        <div id="more" class='inactive'></div>
+    </div>
+
+<script src='assets/javascript/app.js'></script>
+</body>
+
+</html>
+
+<!-- <form id="gif-form">
+    <label for=gif_input">Add an Actor!</label>
+    <input type="text" id="gif-input">
+    <br>
+    <input id="add-gif" type="submit" value="Add your actor!">
+</form> -->
