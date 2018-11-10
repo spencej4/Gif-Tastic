@@ -1,12 +1,11 @@
 let topics = ["Fred Armisen", "Kate McKinnon", "Paul Rudd", "Andy Samberg"];
-let loadMoreCount = 1;
+let loadMoreCount = 0;
+
 
 function renderButtons() {
-    // Deleting the actors prior to adding new movies
-    // (this is necessary otherwise you will have repeat buttons)
     $("#actors-view").empty();
-    for (var i = 0; i < topics.length; i++) {
-
+    
+    for (var i = 0; i < topics.length; i++) { 
         var a = $("<button>");
         // Adding a class of movie-btn to our button
         a.addClass("actor-btn");
@@ -16,9 +15,9 @@ function renderButtons() {
         a.text(topics[i]);
         // Adding the button to the buttons-view div
         $("#actors-view").append(a);
-
     };
 }
+
 
 // adds new topic button 
 $("#add-gif").on("click", function (event) {
@@ -38,15 +37,16 @@ $("#add-gif").on("click", function (event) {
     }
 });
 
+
 function displayGifs() {
     // clears out gifs
     $("#actor-gifs").empty();
     // gets data-name of button clicked
     let actor = $(this).attr("data-name");
-    let queryURL = "http://api.giphy.com/v1/gifs/search?q=" + actor + "&api_key=7LNAVyd8OAIppT6QjyyPVOQd54A1M8Tj"
+    let queryURL = "http://api.giphy.com/v1/gifs/search?q=" + actor + 
+                    "&api_key=7LNAVyd8OAIppT6QjyyPVOQd54A1M8Tj"
 
-    // jquery ajax call
-    $.ajax({
+    $.ajax({ /* jquery ajax call */
             url: queryURL,
             method: "GET",
             beforeSend: function () {
@@ -55,16 +55,13 @@ function displayGifs() {
             },
         })
 
-        // promise
-        .then(function (response) {
+        .then(function (response) { /* promise */
             console.log(response);
             for (var i = 0; i < response.data.length; i++) {
                 // imageUrl variable response data image gif url is set to
                 let imageUrl = response.data[i].images.fixed_height_still.url;
-
                 // dynamically creates img div
                 let actorImage = $("<img>");
-
                 // sets attributes
                 actorImage.attr("src", imageUrl);
                 actorImage.attr('data-state', 'still');
@@ -72,21 +69,36 @@ function displayGifs() {
                 actorImage.attr('data-animate', response.data[i].images.fixed_height.url);
                 actorImage.attr("alt", "actor image");
                 actorImage.addClass('actor-GIF');
-
                 $("#loading").css('display', 'none');
-                // prepends to div with ID of images
-                $("#actor-gifs").prepend(actorImage);
-                
+                // prepends to div with ID of actor image
+                $("#actor-gifs").prepend(actorImage);                
             }
             showMoreButton(actor);
         });
 }
 
-function showMoreButton(actor) {
 
-    $(window).on('scroll', function () {
-        console.log('scroll ran');
-    
+function toggleGif() {
+    let state = $(this).attr('data-state');
+
+    if (state === 'still') {
+        $(this).attr('src', $(this).attr('data-animate'));
+        $(this).attr('data-state', 'animate');
+    } else if (state === 'animate') {
+        $(this).attr('src', $(this).attr('data-still'));
+        $(this).attr('data-state', 'still');
+    }
+}
+
+
+$("#gif-input").keypress(function () {
+    // returns gif-input field to normal when key is pressed
+    $('#gif-input').removeClass('alertUser');
+});
+
+
+function showMoreButton(actor) {
+    $(window).on('scroll', function () {    
         // checks if button is active, to avoid making repeated 'more' buttons
         if ($('#more').hasClass('inactive')) {
             $('#more').removeClass('inactive').addClass('active');
@@ -97,33 +109,30 @@ function showMoreButton(actor) {
         }else {
             $('.load-more').attr("actor", actor);
         }
-
     });
 }
 
-// makes api call when loadMore button is clicked
-function loadMoreGifs() {
+
+
+function loadMoreGifs() { /* makes api call when loadMore button is clicked */
     // gets data-name of button clicked
     let actor = $(this).attr('actor');
-
-    let queryURL = "http://api.giphy.com/v1/gifs/search?q=" + actor + "&offset=" + loadMoreCount + "&api_key=7LNAVyd8OAIppT6QjyyPVOQd54A1M8Tj"
     // iterate up for next use of loadMoreGifs
     loadMoreCount++;
-    // jquery ajax call
-    $.ajax({
+    let queryURL = "http://api.giphy.com/v1/gifs/search?q=" + actor + "&offset=" + 
+                    loadMoreCount + "&api_key=7LNAVyd8OAIppT6QjyyPVOQd54A1M8Tj"
+    
+    $.ajax({ /* jquery ajax call */
             url: queryURL,
             method: "GET"
         })
 
-        // promise
-        .then(function (response) {
+        .then(function (response) { /* promise */
             for (var i = 0; i < response.data.length; i++) {
                 // imageUrl variable response data image gif url is set to
                 let imageUrl = response.data[i].images.fixed_height_still.url;
-
                 // dynamically creates img div
                 let actorImage = $("<img>");
-
                 // sets attributes
                 actorImage.attr("src", imageUrl);
                 actorImage.attr('data-state', 'still');
@@ -131,33 +140,13 @@ function loadMoreGifs() {
                 actorImage.attr('data-animate', response.data[i].images.fixed_height.url);
                 actorImage.attr("alt", "actor image");
                 actorImage.addClass('actor-GIF');
-
                 // appends to div with ID of images
                 $("#actor-gifs").append(actorImage);
-                // $("#loading").();
             }
         });
 }
 
-function toggleGif() {
-    let state = $(this).attr('data-state');
-
-    if (state === 'still') {
-        $(this).attr('src', $(this).attr('data-animate'));
-        $(this).attr('data-state', 'animate');
-    }
-    if (state === 'animate') {
-        $(this).attr('src', $(this).attr('data-still'));
-        $(this).attr('data-state', 'still');
-    }
-}
-
-$("#gif-input").keypress(function () {
-    $('#gif-input').removeClass('alertUser');
-});
-
 $(document).on("click", ".actor-btn", displayGifs);
 $(document).on("click", ".actor-GIF", toggleGif);
 $(document).on("click", ".load-more", loadMoreGifs);
-
 renderButtons();
