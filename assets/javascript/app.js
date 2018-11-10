@@ -43,7 +43,7 @@ function displayGifs() {
     $("#actor-gifs").empty();
     // gets data-name of button clicked
     let actor = $(this).attr("data-name");
-    let queryURL = "http://api.giphy.com/v1/gifs/search?q=" + actor + 
+    let queryURL = "https://api.giphy.com/v1/gifs/search?q=" + actor + 
                     "&api_key=7LNAVyd8OAIppT6QjyyPVOQd54A1M8Tj"
 
     $.ajax({ /* jquery ajax call */
@@ -119,7 +119,7 @@ function loadMoreGifs() { /* makes api call when loadMore button is clicked */
     let actor = $(this).attr('actor');
     // iterate up for next use of loadMoreGifs
     loadMoreCount++;
-    let queryURL = "http://api.giphy.com/v1/gifs/search?q=" + actor + "&offset=" + 
+    let queryURL = "https://api.giphy.com/v1/gifs/search?q=" + actor + "&offset=" + 
                     loadMoreCount + "&api_key=7LNAVyd8OAIppT6QjyyPVOQd54A1M8Tj"
     
     $.ajax({ /* jquery ajax call */
