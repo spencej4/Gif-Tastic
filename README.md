@@ -2,7 +2,7 @@
 
 ## About
 
-This app dynamically updates gameplay state and reflects these changes in the DOM.
+This app allows users to search for their favorite actor gifs, hitting Giphy's API endpoint. Users can click on indidual GIF's to animate them. 
 
 ## Deployment
 * This App is deployed to Github Pages.
